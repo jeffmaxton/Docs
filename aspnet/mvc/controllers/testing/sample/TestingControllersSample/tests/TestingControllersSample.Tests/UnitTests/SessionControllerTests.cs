@@ -1,21 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.AspNet.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Moq;
 using TestingControllersSample.Controllers;
 using TestingControllersSample.Core.Interfaces;
 using TestingControllersSample.Core.Model;
 using TestingControllersSample.ViewModels;
 using Xunit;
-namespace TestingControllerSample.Tests.UnitTests
+
+namespace TestingControllersSample.Tests.UnitTests
 {
     public class SessionControllerTests
     {
         [Fact]
         public void IndexReturnsARedirectToIndexHomeWhenIdIsNull()
         {
-            var controller = new SessionController(sessionRepository:null);
+            var controller = new SessionController(sessionRepository: null);
 
             var result = Assert.IsType<RedirectToActionResult>(controller.Index(null));
             Assert.Equal("Home", result.ControllerName);
@@ -68,6 +69,6 @@ namespace TestingControllerSample.Tests.UnitTests
                 Name = "Test Two"
             });
             return sessions;
-        } 
+        }
     }
 }

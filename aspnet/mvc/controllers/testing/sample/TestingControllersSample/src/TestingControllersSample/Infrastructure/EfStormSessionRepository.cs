@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 using TestingControllersSample.Core.Interfaces;
 using TestingControllersSample.Core.Model;
 
@@ -32,12 +32,6 @@ namespace TestingControllersSample.Infrastructure
 
         public void Add(BrainstormSession session)
         {
-            int maxId = 0;
-            if (_dbContext.BrainstormSessions.Any())
-            {
-                maxId = _dbContext.BrainstormSessions.Max(s => s.Id);
-            }
-            session.Id = maxId + 1;
             _dbContext.BrainstormSessions.Add(session);
             _dbContext.SaveChanges();
         }

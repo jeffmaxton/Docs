@@ -3,32 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using Microsoft.AspNet.TestHost;
-using TestingControllersSample;
+using Newtonsoft.Json;
 using TestingControllersSample.ClientModels;
 using TestingControllersSample.Core.Model;
 using Xunit;
 
-namespace TestingControllerSample.Tests.IntegrationTests
+namespace TestingControllersSample.Tests.IntegrationTests
 {
-    public class ApiIdeasControllerTests
+    public class ApiIdeasControllerTests : IClassFixture<TestFixture<TestingControllersSample.Startup>>
     {
         private readonly HttpClient _client;
 
-        public ApiIdeasControllerTests()
+        public ApiIdeasControllerTests(TestFixture<TestingControllersSample.Startup> fixture)
         {
-            var server = new TestServer(TestServer.CreateBuilder()
-                .UseEnvironment("Development")
-                .UseStartup<Startup>());
-            _client = server.CreateClient();
-
-            // client always expects json results
-            _client.DefaultRequestHeaders.Clear();
-            _client.DefaultRequestHeaders.Accept.Add(
-                new MediaTypeWithQualityHeaderValue("application/json"));
-
+            _client = fixture.Client;
         }
 
         internal class NewIdeaDto
@@ -91,7 +80,7 @@ namespace TestingControllerSample.Tests.IntegrationTests
         {
             var testIdeaName = Guid.NewGuid().ToString();
             var newIdea = new NewIdeaDto(testIdeaName, "Description", 1);
-           
+
             var response = await _client.PostAsJsonAsync("/api/ideas/create", newIdea);
             response.EnsureSuccessStatusCode();
 
@@ -113,7 +102,7 @@ namespace TestingControllerSample.Tests.IntegrationTests
             var response = await _client.GetAsync("/api/ideas/forsession/1");
             response.EnsureSuccessStatusCode();
 
-            var ideaList = await response.Content.ReadAsJsonAsync<List<IdeaDTO>>();
+            var ideaList = JsonConvert.DeserializeObject<List<IdeaDTO>>(await response.Content.ReadAsStringAsync());
             var firstIdea = ideaList.First();
             var testSession = Startup.GetTestSession();
             Assert.Equal(testSession.Ideas.First().Name, firstIdea.name);

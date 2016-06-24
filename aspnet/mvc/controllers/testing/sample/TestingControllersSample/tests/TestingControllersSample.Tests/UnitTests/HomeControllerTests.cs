@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.AspNet.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Moq;
 using TestingControllersSample.Controllers;
 using TestingControllersSample.Core.Interfaces;
@@ -9,7 +9,7 @@ using TestingControllersSample.Core.Model;
 using TestingControllersSample.ViewModels;
 using Xunit;
 
-namespace TestingControllerSample.Tests.UnitTests
+namespace TestingControllersSample.Tests.UnitTests
 {
     public class HomeControllerTests
     {
