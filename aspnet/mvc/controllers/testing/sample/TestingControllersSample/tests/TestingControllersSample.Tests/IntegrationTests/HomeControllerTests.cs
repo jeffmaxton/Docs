@@ -19,11 +19,12 @@ namespace TestingControllersSample.Tests.IntegrationTests
         [Fact]
         public async Task ReturnsInitialListOfBrainstormSessions()
         {
+            // Arrange & Act
             var response = await _client.GetAsync("/");
+
+            // Assert
             response.EnsureSuccessStatusCode();
-
             var responseString = await response.Content.ReadAsStringAsync();
-
             var testSession = Startup.GetTestSession();
             Assert.True(responseString.Contains(testSession.Name));
         }
@@ -31,15 +32,16 @@ namespace TestingControllersSample.Tests.IntegrationTests
         [Fact]
         public async Task PostAddsNewBrainstormSession()
         {
-            var message = new HttpRequestMessage(HttpMethod.Post, "/");
-            var data = new Dictionary<string, string>();
+            // Arrange
             string testSessionName = Guid.NewGuid().ToString();
+            var data = new Dictionary<string, string>();
             data.Add("SessionName", testSessionName);
+            var content = new FormUrlEncodedContent(data);
 
-            message.Content = new FormUrlEncodedContent(data);
+            // Act
+            var response = await _client.PostAsync("/", content);
 
-            var response = await _client.SendAsync(message);
-
+            // Assert
             Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
             Assert.Equal("/", response.Headers.Location.ToString());
         }

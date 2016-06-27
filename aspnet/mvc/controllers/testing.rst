@@ -151,9 +151,7 @@ The following set of tests target the ``Create`` method in the :ref:`IdeasContro
 
 .. literalinclude:: testing/sample/TestingControllersSample/tests/TestingControllersSample.Tests/IntegrationTests/ApiIdeasControllerTests.cs
   :language: c#
-  :lines: 48-101
-  :dedent: 8
-  :emphasize-lines: 1-2,9-10,17-18,25-26,33-34,42-43,51
+  :lines: 37-142
 
 Unlike integration tests of actions that returns HTML views, web API methods that return results can usually be deserialized as strongly typed objects, as the last test above shows. In this case, the test deserializes the result to a ``BrainstormSession`` instance, and confirms that the idea was correctly added to its collection of ideas.
 

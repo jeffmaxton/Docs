@@ -13,13 +13,6 @@ namespace TestingControllersSample.Tests.IntegrationTests
 {
     public class ApiIdeasControllerTests : IClassFixture<TestFixture<TestingControllersSample.Startup>>
     {
-        private readonly HttpClient _client;
-
-        public ApiIdeasControllerTests(TestFixture<TestingControllersSample.Startup> fixture)
-        {
-            _client = fixture.Client;
-        }
-
         internal class NewIdeaDto
         {
             public NewIdeaDto(string name, string description, int sessionId)
@@ -34,56 +27,90 @@ namespace TestingControllersSample.Tests.IntegrationTests
             public int SessionId { get; set; }
         }
 
+        private readonly HttpClient _client;
+
+        public ApiIdeasControllerTests(TestFixture<TestingControllersSample.Startup> fixture)
+        {
+            _client = fixture.Client;
+        }
+
         [Fact]
         public async Task CreatePostReturnsBadRequestForMissingNameValue()
         {
+            // Arrange
             var newIdea = new NewIdeaDto("", "Description", 1);
+
+            // Act
             var response = await _client.PostAsJsonAsync("/api/ideas/create", newIdea);
+
+            // Assert
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         }
 
         [Fact]
         public async Task CreatePostReturnsBadRequestForMissingDescriptionValue()
         {
+            // Arrange
             var newIdea = new NewIdeaDto("Name", "", 1);
+
+            // Act
             var response = await _client.PostAsJsonAsync("/api/ideas/create", newIdea);
+
+            // Assert
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         }
 
         [Fact]
         public async Task CreatePostReturnsBadRequestForSessionIdValueTooSmall()
         {
+            // Arrange
             var newIdea = new NewIdeaDto("Name", "Description", 0);
+
+            // Act
             var response = await _client.PostAsJsonAsync("/api/ideas/create", newIdea);
+
+            // Assert
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         }
 
         [Fact]
         public async Task CreatePostReturnsBadRequestForSessionIdValueTooLarge()
         {
+            // Arrange
             var newIdea = new NewIdeaDto("Name", "Description", 1000001);
+
+            // Act
             var response = await _client.PostAsJsonAsync("/api/ideas/create", newIdea);
+
+            // Assert
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         }
 
         [Fact]
         public async Task CreatePostReturnsNotFoundForInvalidSession()
         {
+            // Arrange
             var newIdea = new NewIdeaDto("Name", "Description", 123);
+
+            // Act
             var response = await _client.PostAsJsonAsync("/api/ideas/create", newIdea);
 
+            // Assert
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
 
         [Fact]
         public async Task CreatePostReturnsCreatedIdeaWithCorrectInputs()
         {
+            // Arrange
             var testIdeaName = Guid.NewGuid().ToString();
             var newIdea = new NewIdeaDto(testIdeaName, "Description", 1);
 
+            // Act
             var response = await _client.PostAsJsonAsync("/api/ideas/create", newIdea);
-            response.EnsureSuccessStatusCode();
 
+            // Assert
+            response.EnsureSuccessStatusCode();
             var returnedSession = await response.Content.ReadAsJsonAsync<BrainstormSession>();
             Assert.Equal(2, returnedSession.Ideas.Count);
             Assert.True(returnedSession.Ideas.Any(i => i.Name == testIdeaName));
@@ -92,21 +119,26 @@ namespace TestingControllersSample.Tests.IntegrationTests
         [Fact]
         public async Task ForSessionReturnsNotFoundForBadSessionId()
         {
+            // Arrange & Act
             var response = await _client.GetAsync("/api/ideas/forsession/500");
+
+            // Assert
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
 
         [Fact]
         public async Task ForSessionReturnsIdeasForValidSessionId()
         {
+            // Arrange & Act
             var response = await _client.GetAsync("/api/ideas/forsession/1");
-            response.EnsureSuccessStatusCode();
 
-            var ideaList = JsonConvert.DeserializeObject<List<IdeaDTO>>(await response.Content.ReadAsStringAsync());
+            // Assert
+            response.EnsureSuccessStatusCode();
+            var ideaList = JsonConvert.DeserializeObject<List<IdeaDTO>>(
+                await response.Content.ReadAsStringAsync());
             var firstIdea = ideaList.First();
             var testSession = Startup.GetTestSession();
             Assert.Equal(testSession.Ideas.First().Name, firstIdea.name);
         }
-
     }
 }
