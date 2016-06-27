@@ -27,7 +27,8 @@ namespace TestingControllersSample.Tests.UnitTests
 
             // Assert
             var viewResult = Assert.IsType<ViewResult>(result);
-            var model = Assert.IsAssignableFrom<IEnumerable<StormSessionViewModel>>(viewResult.ViewData.Model);
+            var model = Assert.IsAssignableFrom<IEnumerable<StormSessionViewModel>>(
+                viewResult.ViewData.Model);
             Assert.Equal(2, model.Count());
         }
 
