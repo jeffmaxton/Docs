@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using TestingControllersSample.Controllers;
@@ -14,48 +15,63 @@ namespace TestingControllersSample.Tests.UnitTests
     public class HomeControllerTests
     {
         [Fact]
-        public void IndexReturnsAViewResultWithAListOfBrainstormSessions()
+        public async Task Index_ReturnsAViewResult_WithAListOfBrainstormSessions()
         {
+            // Arrange
             var mockRepo = new Mock<IBrainstormSessionRepository>();
-            mockRepo.Setup(r => r.List()).Returns(GetTestSessions());
+            mockRepo.Setup(repo => repo.ListAsync()).Returns(Task.FromResult(GetTestSessions()));
             var controller = new HomeController(mockRepo.Object);
 
-            var result = Assert.IsType<ViewResult>(controller.Index());
-            var model = Assert.IsAssignableFrom<IEnumerable<StormSessionViewModel>>
-                (result.ViewData.Model);
+            // Act
+            var result = await controller.Index();
+
+            // Assert
+            var viewResult = Assert.IsType<ViewResult>(result);
+            var model = Assert.IsAssignableFrom<IEnumerable<StormSessionViewModel>>(viewResult.ViewData.Model);
             Assert.Equal(2, model.Count());
         }
 
         [Fact]
-        public void IndexPostReturnsAViewResultWhenModelStateIsInvalid()
+        public async Task IndexPost_ReturnsBadRequestResult_WhenModelStateIsInvalid()
         {
+            // Arrange
             var mockRepo = new Mock<IBrainstormSessionRepository>();
-            mockRepo.Setup(r => r.List()).Returns(GetTestSessions());
+            mockRepo.Setup(repo => repo.ListAsync()).Returns(Task.FromResult(GetTestSessions()));
             var controller = new HomeController(mockRepo.Object);
             controller.ModelState.AddModelError("SessionName", "Required");
             var newSession = new HomeController.NewSessionModel();
 
-            var result = Assert.IsType<ViewResult>(controller.Index(newSession));
-            Assert.IsAssignableFrom<IEnumerable<StormSessionViewModel>>
-                (result.ViewData.Model);
+            // Act
+            var result = await controller.Index(newSession);
+
+            // Assert
+            var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
+            Assert.IsType<SerializableError>(badRequestResult.Value);
         }
 
         [Fact]
-        public void IndexPostReturnsARedirectAndAddsSessionWhenModelStateIsValid()
+        public async Task IndexPost_ReturnsARedirectAndAddsSession_WhenModelStateIsValid()
         {
+            // Arrange
             var mockRepo = new Mock<IBrainstormSessionRepository>();
-            mockRepo.Setup(r => r.Add(It.IsAny<BrainstormSession>())).Verifiable();
+            mockRepo.Setup(repo => repo.AddAsync(It.IsAny<BrainstormSession>()))
+                .Returns(Task.CompletedTask)
+                .Verifiable();
             var controller = new HomeController(mockRepo.Object);
             var newSession = new HomeController.NewSessionModel()
-            { SessionName = "Test Name" };
+            {
+                SessionName = "Test Name"
+            };
 
-            var result = Assert.IsType<RedirectToActionResult>
-                (controller.Index(newSession));
-            Assert.Equal("Home", result.ControllerName);
-            Assert.Equal("Index", result.ActionName);
+            // Act
+            var result = await controller.Index(newSession);
+
+            // Assert
+            var redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
+            Assert.Null(redirectToActionResult.ControllerName);
+            Assert.Equal("Index", redirectToActionResult.ActionName);
             mockRepo.Verify();
         }
-
 
         private List<BrainstormSession> GetTestSessions()
         {
@@ -73,6 +89,6 @@ namespace TestingControllersSample.Tests.UnitTests
                 Name = "Test Two"
             });
             return sessions;
-        } 
+        }
     }
 }

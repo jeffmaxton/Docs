@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using TestingControllersSample.ClientModels;
 using TestingControllersSample.Core.Interfaces;
@@ -19,13 +20,14 @@ namespace TestingControllersSample.Api
 
         [Route("forsession/{sessionId}")]
         [HttpGet]
-        public IActionResult ForSession(int sessionId)
+        public async Task<IActionResult> ForSession(int sessionId)
         {
-            var session = _sessionRepository.GetById(sessionId);
+            var session = await _sessionRepository.GetByIdAsync(sessionId);
             if (session == null)
             {
                 return NotFound(sessionId);
             }
+
             var result = session.Ideas.Select(i => new IdeaDTO()
             {
                 id = i.Id,
@@ -33,18 +35,19 @@ namespace TestingControllersSample.Api
                 description = i.Description,
                 dateCreated = i.DateCreated
             }).ToList();
+
             return Ok(result);
         }
 
         [Route("create")]
         [HttpPost]
-        public IActionResult Create([FromBody]NewIdeaModel model)
+        public async Task<IActionResult> Create([FromBody]NewIdeaModel model)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            var session = _sessionRepository.GetById(model.SessionId);
+            var session = await _sessionRepository.GetByIdAsync(model.SessionId);
             if (session == null)
             {
                 return NotFound(model.SessionId);
@@ -56,7 +59,7 @@ namespace TestingControllersSample.Api
                 Name = model.Name
             };
             session.AddIdea(idea);
-            _sessionRepository.Update(session);
+            await _sessionRepository.UpdateAsync(session);
             return Ok(session);
         }
     }

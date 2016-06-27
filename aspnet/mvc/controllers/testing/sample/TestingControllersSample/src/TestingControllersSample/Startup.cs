@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using TestingControllersSample.Core.Interfaces;
 using TestingControllersSample.Core.Model;
 using TestingControllersSample.Infrastructure;
+using System.Threading.Tasks;
 
 namespace TestingControllersSample
 {
@@ -34,8 +35,8 @@ namespace TestingControllersSample
             {
                 app.UseDeveloperExceptionPage();
 
-                InitializeDatabase(app.ApplicationServices
-                    .GetService<IBrainstormSessionRepository>());
+                var repository = app.ApplicationServices.GetService<IBrainstormSessionRepository>();
+                InitializeDatabaseAsync(repository).Wait();
             }
 
             app.UseStaticFiles();
@@ -43,11 +44,12 @@ namespace TestingControllersSample
             app.UseMvcWithDefaultRoute();
         }
 
-        public void InitializeDatabase(IBrainstormSessionRepository repo)
+        public async Task InitializeDatabaseAsync(IBrainstormSessionRepository repo)
         {
-            if (!repo.List().Any())
+            var sessionList = await repo.ListAsync();
+            if (!sessionList.Any())
             {
-                repo.Add(GetTestSession());
+                await repo.AddAsync(GetTestSession());
             }
         }
 

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using TestingControllersSample.Core.Interfaces;
 using TestingControllersSample.Core.Model;
@@ -15,31 +16,31 @@ namespace TestingControllersSample.Infrastructure
             _dbContext = dbContext;
         }
 
-        public BrainstormSession GetById(int id)
+        public Task<BrainstormSession> GetByIdAsync(int id)
         {
             return _dbContext.BrainstormSessions
                 .Include(s => s.Ideas)
-                .FirstOrDefault(s => s.Id == id);
+                .FirstOrDefaultAsync(s => s.Id == id);
         }
 
-        public List<BrainstormSession> List()
+        public Task<List<BrainstormSession>> ListAsync()
         {
             return _dbContext.BrainstormSessions
                 .Include(s=>s.Ideas)
                 .OrderByDescending(s => s.DateCreated)
-                .ToList();
+                .ToListAsync();
         }
 
-        public void Add(BrainstormSession session)
+        public Task AddAsync(BrainstormSession session)
         {
             _dbContext.BrainstormSessions.Add(session);
-            _dbContext.SaveChanges();
+            return _dbContext.SaveChangesAsync();
         }
 
-        public void Update(BrainstormSession session)
+        public Task UpdateAsync(BrainstormSession session)
         {
             _dbContext.Entry(session).State = EntityState.Modified;
-            _dbContext.SaveChanges();
+            return _dbContext.SaveChangesAsync();
         }
     }
 }

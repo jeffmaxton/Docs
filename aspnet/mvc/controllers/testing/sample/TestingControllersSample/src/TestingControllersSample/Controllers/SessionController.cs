@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using TestingControllersSample.Core.Interfaces;
 using TestingControllersSample.ViewModels;
 
@@ -13,17 +14,19 @@ namespace TestingControllersSample.Controllers
             _sessionRepository = sessionRepository;
         }
 
-        public IActionResult Index(int? id)
+        public async Task<IActionResult> Index(int? id)
         {
             if (!id.HasValue)
             {
                 return RedirectToAction("Index","Home");
             }
-            var session = _sessionRepository.GetById(id.Value);
+
+            var session = await _sessionRepository.GetByIdAsync(id.Value);
             if (session == null)
             {
                 return Content("Session not found.");
             }
+
             var viewModel = new StormSessionViewModel()
                 {
                     DateCreated = session.DateCreated,
