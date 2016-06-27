@@ -16,13 +16,15 @@ namespace TestingControllersSample.Tests.IntegrationTests
         [Fact]
         public async Task IndexReturnsCorrectSessionPage()
         {
+            // Arrange
+            var testSession = Startup.GetTestSession();
+
             // Arrange & Act
             var response = await _client.GetAsync("/Session/Index/1");
 
             // Assert
             response.EnsureSuccessStatusCode();
             var responseString = await response.Content.ReadAsStringAsync();
-            var testSession = Startup.GetTestSession();
             Assert.True(responseString.Contains(testSession.Name));
         }
     }

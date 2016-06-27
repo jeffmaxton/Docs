@@ -19,13 +19,15 @@ namespace TestingControllersSample.Tests.IntegrationTests
         [Fact]
         public async Task ReturnsInitialListOfBrainstormSessions()
         {
-            // Arrange & Act
+            // Arrange
+            var testSession = Startup.GetTestSession();
+
+            // Act
             var response = await _client.GetAsync("/");
 
             // Assert
             response.EnsureSuccessStatusCode();
             var responseString = await response.Content.ReadAsStringAsync();
-            var testSession = Startup.GetTestSession();
             Assert.True(responseString.Contains(testSession.Name));
         }
 

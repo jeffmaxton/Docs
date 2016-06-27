@@ -129,7 +129,10 @@ namespace TestingControllersSample.Tests.IntegrationTests
         [Fact]
         public async Task ForSessionReturnsIdeasForValidSessionId()
         {
-            // Arrange & Act
+            // Arrange
+            var testSession = Startup.GetTestSession();
+
+            // Act
             var response = await _client.GetAsync("/api/ideas/forsession/1");
 
             // Assert
@@ -137,7 +140,6 @@ namespace TestingControllersSample.Tests.IntegrationTests
             var ideaList = JsonConvert.DeserializeObject<List<IdeaDTO>>(
                 await response.Content.ReadAsStringAsync());
             var firstIdea = ideaList.First();
-            var testSession = Startup.GetTestSession();
             Assert.Equal(testSession.Ideas.First().Name, firstIdea.name);
         }
     }
