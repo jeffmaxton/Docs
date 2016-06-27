@@ -7,11 +7,11 @@ using TestingControllersSample.Core.Model;
 
 namespace TestingControllersSample.Infrastructure
 {
-    public class EfStormSessionRepository :IBrainstormSessionRepository
+    public class EFStormSessionRepository : IBrainstormSessionRepository
     {
         private readonly AppDbContext _dbContext;
 
-        public EfStormSessionRepository(AppDbContext dbContext)
+        public EFStormSessionRepository(AppDbContext dbContext)
         {
             _dbContext = dbContext;
         }
@@ -26,7 +26,7 @@ namespace TestingControllersSample.Infrastructure
         public Task<List<BrainstormSession>> ListAsync()
         {
             return _dbContext.BrainstormSessions
-                .Include(s=>s.Ideas)
+                .Include(s => s.Ideas)
                 .OrderByDescending(s => s.DateCreated)
                 .ToListAsync();
         }

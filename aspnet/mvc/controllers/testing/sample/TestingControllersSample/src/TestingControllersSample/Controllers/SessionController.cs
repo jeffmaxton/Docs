@@ -18,7 +18,7 @@ namespace TestingControllersSample.Controllers
         {
             if (!id.HasValue)
             {
-                return RedirectToAction("Index","Home");
+                return RedirectToAction("Index", "Home");
             }
 
             var session = await _sessionRepository.GetByIdAsync(id.Value);
@@ -28,11 +28,12 @@ namespace TestingControllersSample.Controllers
             }
 
             var viewModel = new StormSessionViewModel()
-                {
-                    DateCreated = session.DateCreated,
-                    Name = session.Name,
-                    Id=session.Id
-                };
+            {
+                DateCreated = session.DateCreated,
+                Name = session.Name,
+                Id = session.Id
+            };
+
             return View(viewModel);
         }
     }

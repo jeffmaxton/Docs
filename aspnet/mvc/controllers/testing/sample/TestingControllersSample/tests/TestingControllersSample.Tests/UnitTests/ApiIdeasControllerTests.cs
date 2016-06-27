@@ -115,7 +115,7 @@ namespace TestingControllersSample.Tests.UnitTests
             var okResult = Assert.IsType<OkObjectResult>(result);
             var returnValue = Assert.IsType<List<IdeaDTO>>(okResult.Value);
             var idea = returnValue.FirstOrDefault();
-            Assert.Equal("One", idea.name);
+            Assert.Equal("One", idea.Name);
         }
 
         private BrainstormSession GetTestSession()

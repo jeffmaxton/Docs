@@ -28,12 +28,12 @@ namespace TestingControllersSample.Api
                 return NotFound(sessionId);
             }
 
-            var result = session.Ideas.Select(i => new IdeaDTO()
+            var result = session.Ideas.Select(idea => new IdeaDTO()
             {
-                id = i.Id,
-                name = i.Name,
-                description = i.Description,
-                dateCreated = i.DateCreated
+                Id = idea.Id,
+                Name = idea.Name,
+                Description = idea.Description,
+                DateCreated = idea.DateCreated
             }).ToList();
 
             return Ok(result);
@@ -47,11 +47,13 @@ namespace TestingControllersSample.Api
             {
                 return BadRequest(ModelState);
             }
+
             var session = await _sessionRepository.GetByIdAsync(model.SessionId);
             if (session == null)
             {
                 return NotFound(model.SessionId);
             }
+
             var idea = new Idea()
             {
                 DateCreated = DateTimeOffset.Now,
@@ -59,7 +61,9 @@ namespace TestingControllersSample.Api
                 Name = model.Name
             };
             session.AddIdea(idea);
+
             await _sessionRepository.UpdateAsync(session);
+
             return Ok(session);
         }
     }

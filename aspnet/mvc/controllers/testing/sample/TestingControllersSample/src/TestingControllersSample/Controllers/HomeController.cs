@@ -22,12 +22,12 @@ namespace TestingControllersSample.Controllers
         {
             var sessionList = await _sessionRepository.ListAsync();
 
-            var model = sessionList.Select(s => new StormSessionViewModel()
+            var model = sessionList.Select(session => new StormSessionViewModel()
                {
-                   Id = s.Id,
-                   DateCreated = s.DateCreated,
-                   Name = s.Name,
-                   IdeaCount = s.Ideas.Count
+                   Id = session.Id,
+                   DateCreated = session.DateCreated,
+                   Name = session.Name,
+                   IdeaCount = session.Ideas.Count
                });
 
             return View(model);

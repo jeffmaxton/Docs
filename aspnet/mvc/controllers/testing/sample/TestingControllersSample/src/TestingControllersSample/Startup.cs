@@ -22,7 +22,7 @@ namespace TestingControllersSample
             services.AddMvc();
 
             services.AddScoped<IBrainstormSessionRepository,
-                EfStormSessionRepository>();
+                EFStormSessionRepository>();
         }
 
         public void Configure(IApplicationBuilder app,

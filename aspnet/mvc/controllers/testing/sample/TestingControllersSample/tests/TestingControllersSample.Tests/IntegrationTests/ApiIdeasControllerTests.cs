@@ -140,7 +140,7 @@ namespace TestingControllersSample.Tests.IntegrationTests
             var ideaList = JsonConvert.DeserializeObject<List<IdeaDTO>>(
                 await response.Content.ReadAsStringAsync());
             var firstIdea = ideaList.First();
-            Assert.Equal(testSession.Ideas.First().Name, firstIdea.name);
+            Assert.Equal(testSession.Ideas.First().Name, firstIdea.Name);
         }
     }
 }
