@@ -3,7 +3,7 @@ Adding Validation
 
 By `Rick Anderson`_
 
-In this this section you'll add validation logic to the ``Movie`` model, and you'll ensure that the validation rules are enforced any time a user attempts to create or edit a movie.
+In this section you'll add validation logic to the ``Movie`` model, and you'll ensure that the validation rules are enforced any time a user attempts to create or edit a movie.
 
 Keeping things DRY
 ---------------------
@@ -93,13 +93,13 @@ What's really nice about this approach is that neither the controller nor the ``
 When you need to change validation logic, you can do so in exactly one place by adding validation attributes to the model (in this example, the ``Movie`` class). You won't have to worry about different parts of the application being inconsistent with how the rules are enforced — all validation logic will be defined in one place and used everywhere. This keeps the code very clean, and makes it easy to maintain and evolve. And it means that that you'll be fully honoring the DRY principle.
 
 Using DataType Attributes
----------------------------
+--------------------------
 
 Open the *Movie.cs* file and examine the ``Movie`` class. The ``System.ComponentModel.DataAnnotations`` namespace provides formatting attributes in addition to the built-in set of validation attributes. We've already applied a ``DataType`` enumeration value to the release date and to the price fields. The following code shows the ``ReleaseDate`` and ``Price`` properties with the appropriate ``DataType`` attribute.
 
 .. literalinclude:: start-mvc/sample2/src/MvcMovie/Models/MovieDateRatingDA.cs
   :language: c#
-  :lines: 15-17,23-26
+  :lines: 16-19, 25-27
   :dedent: 8
   :emphasize-lines: 2,6
 

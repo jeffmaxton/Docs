@@ -29,7 +29,7 @@ Before proceeding with this tutorial, you will need the :doc:`published </publis
 Setting up the Nano Server Instance
 -----------------------------------
 
-`Create a new Virtual Machine using Hyper-V <https://technet.microsoft.com/en-us/library/hh846766.aspx>`_ on your development machine using the previously downloaded VHD. The machine will require you to set an administator password before logging on. At the VM console, press F11 to set the password before the first logon.
+`Create a new Virtual Machine using Hyper-V <https://technet.microsoft.com/en-us/library/hh846766.aspx>`_ on your development machine using the previously downloaded VHD. The machine will require you to set an administrator password before logging on. At the VM console, press F11 to set the password before the first log in.
 
 After setting the local password, you will manage Nano Server using PowerShell remoting.
 
@@ -86,7 +86,10 @@ Run the following commands in the PowerShell session that was created earlier:
 
   Install-PackageProvider NanoServerPackage
   Import-PackageProvider NanoServerPackage
+  Install-NanoServerPackage -Name Microsoft-NanoServer-Storage-Package
   Install-NanoServerPackage -Name Microsoft-NanoServer-IIS-Package
+
+.. Note:: Installing *Microsoft-NanoServer-Storage-Package* requires a reboot. This is a temporary work around and won't be required in the future.
 
 To quickly verify if IIS is setup correctly, you can visit the url ``http://<nanoserver-ip-address>/`` and should see a welcome page. When IIS is installed, by default a web site called ``Default Web Site`` listening on port 80 is created.
 
@@ -95,11 +98,20 @@ Installing the ASP.NET Core Module (ANCM)
 
 The ASP.NET Core Module is an IIS 7.5+ module which is responsible for process management of ASP.NET Core HTTP listeners and to proxy requests to processes that it manages. At the moment, the process to install the ASP.NET Core Module for IIS is manual. You will need to install the version of the `.NET Core Windows Server Hosting bundle <https://dot.net/>`__ on a regular (not Nano) machine. After installing the bundle on a regular machine, you will need to copy the following files to the file share that we created earlier.
 
+On a regular (not Nano) machine run the following copy commands:
+
 .. code:: ps1
 
   copy C:\windows\system32\inetsrv\aspnetcore.dll ``\\<nanoserver-ip-address>\AspNetCoreSampleForNano``
   copy C:\windows\system32\inetsrv\config\schema\aspnetcore_schema.xml ``\\<nanoserver-ip-address>\AspNetCoreSampleForNano``
 
+On a Nano machine, you will need to copy the following files from the file share that we created earlier to the valid locations.
+So, run the following copy commands:
+
+.. code:: ps1
+
+  copy C:\PublishedApps\AspNetCoreSampleForNano\aspnetcore.dll C:\windows\system32\inetsrv\
+  copy C:\PublishedApps\AspNetCoreSampleForNano\aspnetcore_schema.xml C:\windows\system32\inetsrv\config\schema\
 
 Run the following script in the remote session:
 
@@ -140,6 +152,14 @@ Run the following commands in the remote session to create a new site in IIS for
 
   Import-module IISAdministration
   New-IISSite -Name "AspNetCore" -PhysicalPath c:\PublishedApps\AspNetCoreSampleForNano -BindingInformation "*:8000:"
+
+Known issue running .NET Core CLI on Nano Server and Workaround
+---------------------------------------------------------------
+If you’re using Nano Server Technical Preview 5 with .NET Core CLI, you will need to copy all DLL files from ``c:\windows\system32\forwarders`` to ``c:\windows\system32``, due to a bug that has since been fixed in later releases.
+
+If you use ``dotnet publish``, make sure to copy all DLL files from ``c:\windows\system32\forwarders`` to your publish directory as well.
+
+If your Nano Server Technical Preview 5 build is updated or serviced, please make sure to repeat this process, in case any of the DLLs have been updated as well.
 
 Running the Application
 -----------------------

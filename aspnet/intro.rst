@@ -58,7 +58,7 @@ The ``UseStartup`` method on ``WebHostBuilder`` specifies the ``Startup`` class 
     :dedent: 4
     :emphasize-lines: 7
 
-The ``Startup`` class is where the you define the request handling pipeline and where any services needed by the app are configured. The ``Startup`` class must be public and contain the following methods:
+The ``Startup`` class is where you define the request handling pipeline and where any services needed by the app are configured. The ``Startup`` class must be public and contain the following methods:
 
 .. code-block:: c#
 
@@ -85,7 +85,7 @@ A service is a component that is intended for common consumption in an applicati
 Middleware
 ----------
 
-In ASP.NET Core you compose your request pipeline using :doc:`/fundamentals/middleware`. ASP.NET Core middleware performs asynchronous logic on an ``HttpContext`` and then either invokes the next middleware in the sequence or terminates the request directly. You generally "Use" middleware by invoking a corresponding ``UseXYZ`` extension method on the ``IApplicationBuilder`` in the ``Configure`` method.
+In ASP.NET Core you compose your request pipeline using :doc:`/fundamentals/middleware`. ASP.NET Core middleware performs asynchronous logic on an ``HttpContext`` and then either invokes the next middleware in the sequence or terminates the request directly. You generally "Use" middleware by taking a dependency on a NuGet package and invoking a corresponding ``UseXYZ`` extension method on the ``IApplicationBuilder`` in the ``Configure`` method.
 
 ASP.NET Core comes with a rich set of prebuilt middleware:
 

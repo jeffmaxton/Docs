@@ -168,7 +168,7 @@ Test the app
 
 .. _DisplayFormatDateLocal:
 
-.. note:: In some locals you'll need to specify the date format. See the highlighted code below.
+.. note:: In some locales you'll need to specify the date format. See the highlighted code below.
 
 .. literalinclude:: start-mvc/sample2/src/MvcMovie/Models/MovieDateFormat.cs
   :language: c#
@@ -216,6 +216,8 @@ Open the *Controllers/MoviesController.cs* file and examine the generated ``Inde
 The constructor uses :doc:`Dependency Injection  </fundamentals/dependency-injection>` to inject the database context into the controller. The database context is used in each of the `CRUD <https://en.wikipedia.org/wiki/Create,_read,_update_and_delete>`__ methods in the controller.
 
 A request to the Movies controller returns all the entries in the ``Movies`` table and then passes the data to the ``Index`` view.
+
+.. _strongly-typed-models-keyword-label:
 
 Strongly typed models and the @model keyword
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

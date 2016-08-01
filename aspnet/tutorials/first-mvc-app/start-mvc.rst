@@ -35,7 +35,11 @@ Complete the **New Project** dialog:
 
 .. image:: start-mvc/_static/new_project2.png
 
-In the **New ASP.NET Core Web Application - MvcMovie** dialog, tap **Web Application**, and then tap **OK**.
+Complete the **New ASP.NET Core Web Application - MvcMovie** dialog:
+
+- Tap **Web Application**
+- Clear **Host in the cloud**
+- Tap **OK**.
 
 .. image:: start-mvc/_static/p3.png
 
@@ -55,7 +59,7 @@ Tap **F5** to run the app in debug mode or **Ctl-F5** in non-debug mode.
 
 .. image:: start-mvc/_static/iis_express.png
 
-The default template gives you working **Home, Contact, About, Register** and **Log in** links. The browser image above doesn't show theses links. Depending on the size of your browser, you might need to click the navigation icon to show them. 
+The default template gives you working **Home, Contact, About, Register** and **Log in** links. The browser image above doesn't show these links. Depending on the size of your browser, you might need to click the navigation icon to show them. 
 
 .. image:: start-mvc/_static/2.png
 

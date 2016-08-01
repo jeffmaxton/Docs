@@ -14,7 +14,7 @@ Currently the ``Index`` method returns a string with a message that is hard-code
   :lines: 102-105
   :dedent: 8
 
-The ``Index`` method above uses a view template to generate an HTML response to the browser. Controller methods (also known as action methods, such as the ``Index`` method above, generally return an ``IActionResult`` (or a class derived from ``ActionResult``), not primitive types like string.
+The ``Index`` method above uses a view template to generate an HTML response to the browser. Controller methods (also known as action methods) such as the ``Index`` method above, generally return an ``IActionResult`` (or a class derived from ``ActionResult``), not primitive types like string.
 
 - Right click on the *Views* folder, and then **Add > New Folder** and name the folder *HelloWorld*.
 - Right click on the *Views/HelloWorld* folder, and then **Add > New Item**.
@@ -95,7 +95,7 @@ Also notice how the content in the *Index.cshtml* view template was merged with 
 
 .. image:: adding-view/_static/hell3.png
 
-Our little bit of "data" (in this case the "Hello from our View Template!" message) is hard-coded, though. The MVC application has a "V" (view) and you've got a "C" (controller), but no "M" (model) yet. Shortly, we'll walk through how create a database and retrieve model data from it.
+Our little bit of "data" (in this case the "Hello from our View Template!" message) is hard-coded, though. The MVC application has a "V" (view) and you've got a "C" (controller), but no "M" (model) yet. Shortly, we'll walk through how to create a database and retrieve model data from it.
 
 Passing Data from the Controller to the View
 ----------------------------------------------
@@ -135,6 +135,6 @@ Data is taken from the URL and passed to the controller using the :doc:`MVC mode
 
 .. image:: adding-view/_static/rick.png
 
-In the sample above, we used the ``ViewData`` dictionary to pass data from the controller to a view. Later in the tutorial, we will use a view model to pass data from a controller to a view. The view model approach to passing data is generally much preferred over the ``ViewData`` dictionary approach. See :doc:`/mvc/views/dynamic-vs-static` for more information.
+In the sample above, we used the ``ViewData`` dictionary to pass data from the controller to a view. Later in the tutorial, we will use a view model to pass data from a controller to a view. The view model approach to passing data is generally much preferred over the ``ViewData`` dictionary approach.
 
 Well, that was a kind of an "M" for model, but not the database kind. Let's take what we've learned and create a database of movies. 
